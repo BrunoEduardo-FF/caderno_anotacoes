@@ -13,6 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.infnet.caderno_anotacoes.R
 import br.edu.infnet.caderno_anotacoes.adapter.AnotacoesAdapter
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
@@ -25,6 +28,7 @@ class AnotacoesFragment : Fragment() {
     private lateinit var fabAdicionar: FloatingActionButton
     private lateinit var btnLogout: ImageButton
     private lateinit var lblUserEmail: TextView
+    private lateinit var adView: AdView
     private var auth = Firebase.auth
     private var user = auth.currentUser
 
@@ -36,7 +40,14 @@ class AnotacoesFragment : Fragment() {
         exitIfNoUser()
         setupWidgets(view)
         setupViewModel(view)
+        loadAds()
         return view
+    }
+
+    private fun loadAds() {
+        MobileAds.initialize(requireContext())
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,6 +80,7 @@ class AnotacoesFragment : Fragment() {
         btnLogout = view.findViewById(R.id.fragment_anotacoes_btn_logout)
         lblUserEmail = view.findViewById(R.id.fragment_anotacoes_lbl_user_email)
         lblUserEmail.text = "Usuário: ${user?.email}"
+        adView = view.findViewById(R.id.fragment_anotacoes_ad_view)
     }
 
     private fun deletaAnotacao(position: Int) {
